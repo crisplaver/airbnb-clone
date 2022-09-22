@@ -64,6 +64,16 @@ const Tab = ({
                         span: {
                             filter: 'contrast(1)',
                         }
+                    },
+                    ":active": {
+                        img: {
+                            transform: 'scale(0.90)',
+                            filter: 'contrast(1)',
+                        },
+                        span: {
+                            transform: 'scale(0.90) translateY(-2px)',
+                            filter: 'contrast(1)',
+                        }
                     }
                 }}>
                 <img
@@ -93,6 +103,7 @@ const Tab = ({
                             fontSize: 12,
                             filter: selected ? 'contrast(1)' : 'contrast(calc(13 / 44))',
                             transition: 'all 0.2s',
+                            display: 'block'
                         }}>
                         {title}
                     </span>
