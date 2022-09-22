@@ -14,6 +14,7 @@ function App() {
         backgroundColor: 'white',
         top: 0,
         boxShadow: '0 2px 5px rgb(0 0 0 / 10%)',
+        zIndex: 100
       }}>
         <SearchBar containerCss={{ padding: '24px 14px', paddingBottom: 0 }} />
         <Tabs items={tabs} />

@@ -1,6 +1,8 @@
 import { Interpolation, Theme } from "@emotion/react"
 import { Room } from "../apis/rooms"
 import { ReactComponent as StarIcon } from '../assets/star.svg';
+import { ReactComponent as HeartIcon } from '../assets/heart.svg';
+import { useState } from "react";
 
 const RoomList = ({
     items,
@@ -15,13 +17,13 @@ const RoomList = ({
                 display: 'grid',
                 gridTemplateColumns: 'repeat(var(--breakpoint-grid_columns, 1), minmax(0, 1fr))',
                 gap: '40px 24px',
-                paddingLeft: 'var(--padding, 24px)', 
-                paddingRight: 'var(--padding, 24px)', 
-                marginTop: 16,
+                paddingLeft: 'var(--padding, 24px)',
+                paddingRight: 'var(--padding, 24px)',
+                marginTop: 24,
                 marginBottom: 40,
                 '@media (min-width: 550px)': {
                     '--breakpoint-grid_columns': 2,
-                    '--padding': '40px'
+                    '--padding': '24px'
                 },
                 '@media (min-width: 950px)': {
                     '--breakpoint-grid_columns': 3,
@@ -64,10 +66,25 @@ const RoomListItem = ({
     pictures: string[]
 
 }) => {
+    const [selected, setSelected] = useState(false);
+
     return (
-        <div>
+        <div css={{position: 'relative'}}>
             <div css={{ borderRadius: 12, overflow: 'clip', marginBottom: 12, width: '100%', aspectRatio: '20 / 19' }}>
                 <img src={pictures[0]} css={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+                <button
+                    css={{
+                        padding: 8,
+                        border: 0,
+                        position: 'absolute',
+                        backgroundColor: 'transparent',
+                        top: 6,
+                        right: 6,
+                    }}
+                    onClick={() => setSelected(!selected)}
+                >
+                    <HeartIcon stroke={'white'} fill={selected ? '#FF385C' : 'rgba(0, 0, 0, 0.5)'} />
+                </button>
             </div>
             <div css={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                 <div
@@ -84,8 +101,8 @@ const RoomListItem = ({
                     <div css={{ fontSize: 15, marginLeft: 4 }}>{avgRating || 'NEW'}</div>
                 </div>
             </div>
-            <div css={{ fontSize: 15, marginTop: 2 }}>{location}</div>
-            <div css={{ fontSize: 15, marginTop: 2 }}>{period}</div>
+            <div css={{ fontSize: 15, marginTop: 2, color: 'rgb(113, 113, 113)' }}>{location}</div>
+            <div css={{ fontSize: 15, marginTop: 2, color: 'rgb(113, 113, 113)' }}>{period}</div>
             <div css={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
                 <div css={{ fontSize: 15, fontWeight: 600 }}>{price}</div>
                 <div css={{ fontSize: 15 }}>&nbsp;{qualifier}</div>

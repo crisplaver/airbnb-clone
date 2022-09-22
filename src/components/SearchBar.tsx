@@ -24,8 +24,8 @@ const SearchBar = ({ containerCss }: { containerCss: Interpolation<Theme> }) => 
                         <SearchIcon />
                     </div>
                     <div css={{ flex: 1 }}>
-                        <div css={{ fontSize: 14, fontWeight: 600 }}>어디로 여행가세요?</div>
-                        <div css={{ fontSize: 12, color: '#717171' }}>어디든지 • 언제든지 일주일 • 게스트 추가</div>
+                        <div css={{ fontSize: 14, fontWeight: 600, lineHeight: '20px' }}>어디로 여행가세요?</div>
+                        <div css={{ fontSize: 12, color: '#717171', lineHeight: '16px' }}>어디든지 • 언제든지 일주일 • 게스트 추가</div>
                     </div>
                 </div>
                 <button
