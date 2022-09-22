@@ -1,4 +1,3 @@
-import { Interpolation, Theme } from "@emotion/react"
 import { useState } from "react"
 
 const Tabs = ({

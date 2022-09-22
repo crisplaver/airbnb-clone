@@ -69,7 +69,7 @@ const RoomListItem = ({
     const [selected, setSelected] = useState(false);
 
     return (
-        <div css={{position: 'relative'}}>
+        <div css={{ position: 'relative' }}>
             <div css={{ borderRadius: 12, overflow: 'clip', marginBottom: 12, width: '100%', aspectRatio: '20 / 19' }}>
                 <img src={pictures[0]} css={{ objectFit: 'cover', width: '100%', height: '100%' }} />
                 <button
@@ -80,6 +80,10 @@ const RoomListItem = ({
                         backgroundColor: 'transparent',
                         top: 6,
                         right: 6,
+                        ":active": {
+                            transform: 'scale(0.9)',
+                            transition: 'all 0.2s'
+                        }
                     }}
                     onClick={() => setSelected(!selected)}
                 >
