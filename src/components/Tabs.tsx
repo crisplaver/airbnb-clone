@@ -10,8 +10,6 @@ const Tabs = ({
     return (
         <div css={{
             display: 'flex',
-            // flexDirection: 'row',
-            // alignItems: 'center',
             overflowX: 'scroll',
             '::-webkit-scrollbar': {
                 display: 'none'
@@ -54,27 +52,35 @@ const Tab = ({
                         flexDirection: 'column',
                         alignItems: 'center',
                         filter: selected ? 'contrast(1)' : 'contrast(calc(13 / 44))',
-                        gap: '4px'
-                    }}>
-                    <img src={imageUrl} css={{ width: 24, height: 24 }} />
-                    <div css={
-                        {
-                            "&:after": selected && {
-                                content: '""',
-                                backgroundColor: 'black',
-                                height: 2,
-                                top: 57,
-                                insetInlineStart: 0,
-                                insetInlineEnd: 0,
-                                position: 'absolute'
-                            }
+                        '--display': selected ? 'block' : 'none',
+                        '--bar-color': 'black',
+                        gap: '4px',
+                        ":hover": {
+                            filter: 'contrast(1)',
+                            '--display': 'block',
+                            '--bar-color': selected ? 'black' : '#DDDDDD'
                         }
-                    }>
+                    }}>
+                    <img
+                        src={imageUrl}
+                        css={{ width: 24, height: 24 }}
+                    />
+                    <div css={{
+                        position: 'relative',
+                        "&:after": {
+                            content: '""',
+                            backgroundColor: 'var(--bar-color)',
+                            height: 2,
+                            top: 'calc(100% + 13px)',
+                            insetInline: 0,
+                            position: 'absolute',
+                            display: 'var(--display)'
+                        }
+                    }}>
                         <span
                             css={{
                                 fontWeight: 600,
                                 fontSize: 12,
-
                             }}>
                             {title}
                         </span>
