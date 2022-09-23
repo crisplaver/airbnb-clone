@@ -2,7 +2,7 @@ import { Interpolation, Theme } from "@emotion/react"
 import { Room } from "../apis/rooms"
 import { ReactComponent as StarIcon } from '../assets/star.svg';
 import { ReactComponent as HeartIcon } from '../assets/heart.svg';
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const RoomList = ({
     items,
@@ -67,11 +67,71 @@ const RoomListItem = ({
 
 }) => {
     const [selected, setSelected] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
     return (
         <div css={{ position: 'relative' }}>
-            <div css={{ borderRadius: 12, overflow: 'clip', marginBottom: 12, width: '100%', aspectRatio: '20 / 19' }}>
-                <Picture src={pictures[0]} css={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+            <div css={{ position: 'relative' }}>
+                <div
+                    css={{
+                        borderRadius: 12,
+                        marginBottom: 12,
+                        width: '100%',
+                        aspectRatio: '20 / 19',
+                        display: 'grid',
+                        gridAutoFlow: 'column',
+                        gridTemplateAreas: 'none',
+                        gridAutoColumns: '100%',
+                        overflowY: 'hidden',
+                        overflowX: 'auto',
+                        scrollSnapType: 'x mandatory',
+                        '::-webkit-scrollbar': {
+                            display: 'none'
+                        }
+                    }}
+                >
+                    {pictures.map((picture, index) => (
+                        <Picture index={index} src={picture} onChangeIndex={index => setCurrentIndex(index)} />
+                    ))}
+
+
+                </div>
+                <div
+                    css={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        height: 20,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                    <div css={{
+                        overflow: 'clip',
+                        width: '55px'
+                    }}>
+                        <div
+                            css={{
+                                display: 'flex',
+                                transform: `translateX(${-11 * clamp(currentIndex, 2, pictures.length - 2)}px)`,
+                                transition: 'all 0.2s'
+                            }}>
+                            {new Array(20).fill(0).map((_, index) => (
+                                <span
+                                    css={{
+                                        flexShrink: 0,
+                                        height: 6,
+                                        width: 6,
+                                        borderRadius: '50%',
+                                        backgroundColor: 'white',
+                                        margin: '0 2.5px',
+                                        opacity: currentIndex === index ? 1 : 0.6
+                                    }} />
+                            ))}
+                        </div>
+                    </div>
+                </div>
                 <button
                     css={{
                         padding: 8,
@@ -115,14 +175,40 @@ const RoomListItem = ({
     )
 }
 
-const Picture = ({ src }: { src: string }) => {
+const Picture = ({ src, index, onChangeIndex }: { src: string, index: number, onChangeIndex: (index: number) => void }) => {
+    const pictureRef = useRef<HTMLPictureElement>(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                onChangeIndex(index)
+            }
+        }, {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5
+        });
+
+        if (pictureRef.current) observer.observe(pictureRef.current);
+
+        return () => {
+            if (pictureRef.current) observer.unobserve(pictureRef.current)
+        }
+    }, [])
+
     return (
-        <picture>
+        <picture css={{ scrollSnapAlign: 'center' }} ref={pictureRef}>
             <source srcSet={src.replace('im_w=720', 'im_w=320')} media='(max-width: 743px)' />
             <source srcSet={src} media='(min-width: 743.1px) and (max-width: 1127px)' />
             <img src={src} css={{ objectFit: 'cover', width: '100%', height: '100%' }} />
         </picture>
     )
+}
+
+const clamp = (value: number, left: number, right: number) => {
+    if (value < left) return 0;
+    if (value >= right) return right - 3;
+    return value - 2
 }
 
 export default RoomList;
