@@ -71,7 +71,7 @@ const RoomListItem = ({
     return (
         <div css={{ position: 'relative' }}>
             <div css={{ borderRadius: 12, overflow: 'clip', marginBottom: 12, width: '100%', aspectRatio: '20 / 19' }}>
-                <img src={pictures[0]} css={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+                <Picture src={pictures[0]} css={{ objectFit: 'cover', width: '100%', height: '100%' }} />
                 <button
                     css={{
                         padding: 8,
@@ -112,6 +112,16 @@ const RoomListItem = ({
                 <div css={{ fontSize: 15 }}>&nbsp;{qualifier}</div>
             </div>
         </div>
+    )
+}
+
+const Picture = ({ src }: { src: string }) => {
+    return (
+        <picture>
+            <source srcSet={src.replace('im_w=720', 'im_w=320')} media='(max-width: 743px)' />
+            <source srcSet={src} media='(min-width: 743.1px) and (max-width: 1127px)' />
+            <img src={src} css={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+        </picture>
     )
 }
 
