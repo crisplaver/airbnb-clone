@@ -2,7 +2,13 @@ import { Interpolation, Theme } from "@emotion/react"
 import { ReactComponent as SearchIcon } from '../assets/search.svg';
 import { ReactComponent as FilterIcon } from '../assets/filter.svg';
 
-const SearchBar = ({ containerCss }: { containerCss: Interpolation<Theme> }) => {
+const SearchBar = ({
+    containerCss,
+    onClickFilter
+}: {
+    containerCss: Interpolation<Theme>,
+    onClickFilter: () => void
+}) => {
     return (
         <div css={containerCss}>
             <div
@@ -29,6 +35,7 @@ const SearchBar = ({ containerCss }: { containerCss: Interpolation<Theme> }) => 
                     </div>
                 </div>
                 <button
+                    onClick={onClickFilter}
                     style={{
                         border: 0,
                         background: 'transparent',
