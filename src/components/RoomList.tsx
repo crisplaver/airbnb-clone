@@ -6,32 +6,46 @@ import { useEffect, useRef, useState } from "react";
 
 const RoomList = ({
     items,
-    containerCss
+    containerCss,
+    onScroll
 }: {
     items: Room[],
-    containerCss: Interpolation<Theme>
+    containerCss?: Interpolation<Theme>,
+    onScroll: (scrollY: number) => void
 }) => {
+    useEffect(() => {
+        let prevScrollY = window.scrollY
+        window.onscroll = (v) => {
+            let currentScrollY = window.scrollY;
+            onScroll(currentScrollY - prevScrollY);
+            prevScrollY = currentScrollY;
+        }
+    }, [])
     return (
-        <div css={containerCss}>
-            <div css={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(var(--breakpoint-grid_columns, 1), minmax(0, 1fr))',
-                gap: '40px 24px',
-                paddingLeft: 'var(--padding, 24px)',
-                paddingRight: 'var(--padding, 24px)',
-                marginTop: 24,
-                marginBottom: 40,
-                '@media (min-width: 550px)': {
-                    '--breakpoint-grid_columns': 2,
-                    '--padding': '24px'
-                },
-                '@media (min-width: 950px)': {
-                    '--breakpoint-grid_columns': 3,
-                },
-                '@media (min-width: 1128px)': {
-                    '--breakpoint-grid_columns': 4
-                },
-            }}>
+        <div
+            css={containerCss}
+        >
+            <div
+                css={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(var(--breakpoint-grid_columns, 1), minmax(0, 1fr))',
+                    gap: '40px 24px',
+                    paddingLeft: 'var(--padding, 24px)',
+                    paddingRight: 'var(--padding, 24px)',
+                    marginTop: 24,
+                    marginBottom: 40,
+                    '@media (min-width: 550px)': {
+                        '--breakpoint-grid_columns': 2,
+                        '--padding': '24px'
+                    },
+                    '@media (min-width: 950px)': {
+                        '--breakpoint-grid_columns': 3,
+                    },
+                    '@media (min-width: 1128px)': {
+                        '--breakpoint-grid_columns': 4
+                    },
+                }}
+            >
                 {items.map(item => (
                     <RoomListItem
                         title={item.listing.title}

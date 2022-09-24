@@ -2,26 +2,27 @@ import { ReactComponent as SearchTabIcon } from '../assets/searchTab.svg';
 import { ReactComponent as WidhListTabIcon } from '../assets/wishListTab.svg';
 import { ReactComponent as LoginTabIcon } from '../assets/loginTab.svg';
 import { FunctionComponent, SVGProps, useState } from 'react';
+import { Interpolation, Theme } from '@emotion/react';
 
-const BottomTabs = () => {
+const BottomTabs = ({ containerCss }: { containerCss: Interpolation<Theme> }) => {
     const [tabIndex, setTabIndex] = useState(0);
 
     return (
-        <div style={{
-            display: 'flex',
-            position: 'fixed',
-            bottom: 0,
-            backgroundColor: 'white',
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'row',
-            height: 65,
-            borderTop: '1px solid #EBEBEB'
-        }}>
-            <Tab title='둘러보기' TabIcon={SearchTabIcon} selected={tabIndex === 0} onClick={() => setTabIndex(0)} />
-            <Tab title='위시리스트' TabIcon={WidhListTabIcon} selected={tabIndex === 1} onClick={() => setTabIndex(1)} />
-            <Tab title='로그인' TabIcon={LoginTabIcon} selected={tabIndex === 2} onClick={() => setTabIndex(2)} />
+        <div css={containerCss}>
+            <div style={{
+                display: 'flex',
+                backgroundColor: 'white',
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+                height: 65,
+                borderTop: '1px solid #EBEBEB'
+            }}>
+                <Tab title='둘러보기' TabIcon={SearchTabIcon} selected={tabIndex === 0} onClick={() => setTabIndex(0)} />
+                <Tab title='위시리스트' TabIcon={WidhListTabIcon} selected={tabIndex === 1} onClick={() => setTabIndex(1)} />
+                <Tab title='로그인' TabIcon={LoginTabIcon} selected={tabIndex === 2} onClick={() => setTabIndex(2)} />
+            </div>
         </div>
     )
 }
