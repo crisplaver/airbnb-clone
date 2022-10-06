@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-let isPointerDown = false;
+let isPointerPressed = false;
 let prevY = 0
 
 const RoomListHandle = ({
@@ -14,30 +14,55 @@ const RoomListHandle = ({
     const [y, setY] = useState(0);
 
     useEffect(() => {
-        const handlePointerMove = (e: PointerEvent) => {
-            if (isPointerDown) {
+        const handleMouseMove = (e: any) => {
+            if (isPointerPressed) {
                 setY(e.clientY - prevY)
             }
         }
 
-        const handlePointerUp = () => {
-            isPointerDown = false;
+        const handleMouseUp = () => {
+            isPointerPressed = false;
             onHandleMoveEnd();
             setY(0);
         }
 
-        const handlePointerDown = (e: PointerEvent) => {
+        const handleMouseDown = (e: any) => {
             prevY = e.clientY
-            isPointerDown = true;
+            isPointerPressed = true;
         }
-        document.addEventListener('pointermove', handlePointerMove)
-        document.addEventListener('pointerup', handlePointerUp)
-        box.current?.addEventListener('pointerdown', handlePointerDown)
+
+        const handleTouchMove = (e: any) => {
+            if (isPointerPressed) {
+                setY(e.targetTouches[0].clientY - prevY)
+            }
+        }
+
+        const handleTouchEnd = () => {
+            isPointerPressed = false;
+            onHandleMoveEnd();
+            setY(0);
+        }
+
+        const handleTouchStart = (e: any) => {
+            prevY = e.targetTouches[0].clientY
+            isPointerPressed = true;
+        }
+
+
+        document.addEventListener('mousemove', handleMouseMove)
+        document.addEventListener('mouseup', handleMouseUp)
+        box.current?.addEventListener('mousedown', handleMouseDown)
+        document.addEventListener('touchmove', handleTouchMove)
+        document.addEventListener('touchend', handleTouchEnd)
+        box.current?.addEventListener('touchstart', handleTouchStart)
 
         return () => {
-            document.removeEventListener('pointermove', handlePointerMove)
-            document.removeEventListener('pointerup', handlePointerUp)
-            document.removeEventListener('pointerdown', handlePointerDown)
+            document.removeEventListener('mousemove', handleMouseMove)
+            document.removeEventListener('mouseup', handleMouseUp)
+            box.current?.removeEventListener('mousedown', handleMouseDown)
+            document.removeEventListener('touchmove', handleTouchMove)
+            document.removeEventListener('touchend', handleTouchEnd)
+            box.current?.removeEventListener('touchstart', handleTouchStart)
         }
     }, [])
 
@@ -57,13 +82,10 @@ const RoomListHandle = ({
                     width: '100%',
                     height: '100%',
                     backgroundColor: 'white',
-                    transition: 'all 0.5s',
+                    transition: isPointerPressed ? 'all 0s' : 'all 0.5s',
                     borderTopLeftRadius: 24,
                     borderTopRightRadius: 24,
-                    transform: isCollabsed ? `translateY(calc(100% - 80px + ${y}px))` : 'translateY(0px)',
-                    ":active": {
-                        transition: 'all 0s'
-                    }
+                    transform: isCollabsed ? `translateY(calc(100% - 80px + ${y}px))` : 'translateY(0px)'
                 }}
             >
                 <div
