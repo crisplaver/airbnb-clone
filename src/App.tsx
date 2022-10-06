@@ -37,17 +37,12 @@ function App() {
         <Tabs items={tabs} />
       </div>
 
-      <Map
-        containerCss={{
-          position: 'fixed',
-          height: '100%',
-          width: '100%',
-          bottom: 0,
-          backgroundColor: 'red'
-        }}
-      />
+      <Map />
 
-      <RoomListHandle isCollabsed={isCollabsed} />
+      <RoomListHandle
+        isCollabsed={isCollabsed}
+        onHandleMoveEnd={() => setIsCollabsed(false)}
+      />
 
       <RoomList
         items={rooms}

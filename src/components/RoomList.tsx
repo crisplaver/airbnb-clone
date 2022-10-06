@@ -22,8 +22,8 @@ const RoomList = ({
     }, [])
     return (
         <div
-            css={isCollabsed && {
-                visibility: 'hidden'
+            css={{
+                visibility: isCollabsed ? 'hidden' : undefined
             }}>
             {!isCollabsed &&
                 <div

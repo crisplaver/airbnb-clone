@@ -1,10 +1,6 @@
 import { Interpolation, Theme } from "@emotion/react"
 
-const Map = ({
-    containerCss
-}: {
-    containerCss: Interpolation<Theme>
-}) => {
+const Map = () => {
     return (
         <div
             css={{
@@ -17,7 +13,8 @@ const Map = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: 24,
-                fontWeight: 600
+                fontWeight: 600,
+                zIndex: -100
             }}>
             지도
         </div>
