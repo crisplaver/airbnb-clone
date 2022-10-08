@@ -21,9 +21,11 @@ const RoomListHandle = ({
         }
 
         const handleMouseUp = () => {
-            isPointerPressed = false;
-            onHandleMoveEnd();
-            setY(0);
+            if (isPointerPressed) {
+                isPointerPressed = false;
+                onHandleMoveEnd();
+                setY(0);
+            }
         }
 
         const handleMouseDown = (e: any) => {

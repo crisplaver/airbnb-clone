@@ -109,8 +109,6 @@ const RoomListItem = ({
                     {pictures.map((picture, index) => (
                         <Picture index={index} src={picture} onChangeIndex={index => setCurrentIndex(index)} />
                     ))}
-
-
                 </div>
                 <div
                     css={{
