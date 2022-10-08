@@ -74,7 +74,8 @@ const Tab = ({
                             filter: 'contrast(1)',
                         }
                     }
-                }}>
+                }}
+            >
                 <img
                     src={imageUrl}
                     css={{
@@ -84,25 +85,27 @@ const Tab = ({
                         transition: 'all 0.2s',
                     }}
                 />
-                <div css={{
-                    position: 'relative',
-                    "&:after": {
-                        content: '""',
-                        backgroundColor: 'var(--bar-color)',
-                        height: 2,
-                        top: 'calc(100% + 13px)',
-                        insetInline: 0,
-                        position: 'absolute',
-                        opacity: 'var(--opacity)'
-                    }
-                }}>
+                <div
+                    css={{
+                        position: 'relative',
+                        "&:after": {
+                            content: '""',
+                            backgroundColor: 'var(--bar-color)',
+                            height: 2,
+                            top: 'calc(100% + 13px)',
+                            insetInline: 0,
+                            position: 'absolute',
+                            opacity: 'var(--opacity)'
+                        }
+                    }}>
                     <span
                         css={{
                             fontWeight: 600,
                             fontSize: 12,
                             filter: selected ? 'contrast(1)' : 'contrast(calc(13 / 44))',
                             transition: 'all 0.2s',
-                            display: 'block'
+                            display: 'block',
+                            color: '#484848'
                         }}>
                         {title}
                     </span>
