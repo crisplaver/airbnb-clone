@@ -40,9 +40,11 @@ const RoomListHandle = ({
         }
 
         const handleTouchEnd = () => {
-            isPointerPressed = false;
-            onHandleMoveEnd();
-            setY(0);
+            if (isPointerPressed) {
+                isPointerPressed = false;
+                onHandleMoveEnd();
+                setY(0);
+            }
         }
 
         const handleTouchStart = (e: any) => {
