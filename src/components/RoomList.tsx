@@ -1,7 +1,10 @@
 import { Room } from "../apis/rooms"
 import { ReactComponent as StarIcon } from '../assets/star.svg';
 import { ReactComponent as HeartIcon } from '../assets/heart.svg';
+import { ReactComponent as LeftIcon } from '../assets/left.svg';
+import { ReactComponent as RightIcon } from '../assets/right.svg';
 import { useEffect, useRef, useState } from "react";
+import styled from "@emotion/styled";
 
 const RoomList = ({
     items,
@@ -82,88 +85,20 @@ const RoomListItem = ({
     pictures: string[]
 
 }) => {
-    const [selected, setSelected] = useState(false);
-    const [currentIndex, setCurrentIndex] = useState(0);
-
     return (
-        <div css={{ position: 'relative' }}>
-            <div css={{ position: 'relative' }}>
-                <div
-                    css={{
-                        borderRadius: 12,
-                        marginBottom: 12,
-                        width: '100%',
-                        aspectRatio: '20 / 19',
-                        display: 'grid',
-                        gridAutoFlow: 'column',
-                        gridTemplateAreas: 'none',
-                        gridAutoColumns: '100%',
-                        overflowY: 'hidden',
-                        overflowX: 'auto',
-                        scrollSnapType: 'x mandatory',
-                        '::-webkit-scrollbar': {
-                            display: 'none'
-                        }
-                    }}
-                >
-                    {pictures.map((picture, index) => (
-                        <Picture index={index} src={picture} onChangeIndex={index => setCurrentIndex(index)} />
-                    ))}
-                </div>
-                <div
-                    css={{
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        height: 20,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}>
-                    <div css={{
-                        overflow: 'clip',
-                        width: '55px'
-                    }}>
-                        <div
-                            css={{
-                                display: 'flex',
-                                transform: `translateX(${-11 * clamp(currentIndex, 2, pictures.length - 2)}px)`,
-                                transition: 'all 0.2s'
-                            }}>
-                            {new Array(20).fill(0).map((_, index) => (
-                                <span
-                                    css={{
-                                        flexShrink: 0,
-                                        height: 6,
-                                        width: 6,
-                                        borderRadius: '50%',
-                                        backgroundColor: 'white',
-                                        margin: '0 2.5px',
-                                        opacity: currentIndex === index ? 1 : 0.6
-                                    }} />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-                <button
-                    css={{
-                        padding: 8,
-                        border: 0,
-                        position: 'absolute',
-                        backgroundColor: 'transparent',
-                        top: 6,
-                        right: 6,
-                        ":active": {
-                            transform: 'scale(0.9)',
-                            transition: 'all 0.2s'
-                        }
-                    }}
-                    onClick={() => setSelected(!selected)}
-                >
-                    <HeartIcon stroke={'white'} fill={selected ? '#FF385C' : 'rgba(0, 0, 0, 0.5)'} />
-                </button>
-            </div>
+        <div
+            css={{
+                position: 'relative',
+                ':hover': {
+                    '#arrow-button-wrapper': {
+                        transition: 'all 0.3s',
+                        opacity: 1,
+                        visibility: 'visible'
+                    }
+                }
+            }}
+        >
+            <Pictures pictures={pictures} />
             <div css={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                 <div
                     css={{
@@ -184,6 +119,132 @@ const RoomListItem = ({
             <div css={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
                 <div css={{ fontSize: 15, fontWeight: 600 }}>{price}</div>
                 <div css={{ fontSize: 15 }}>&nbsp;{qualifier}</div>
+            </div>
+        </div>
+    )
+}
+
+const Pictures = ({ pictures }: { pictures: string[] }) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [selected, setSelected] = useState(false);
+    const scrollBoxRef = useRef<HTMLDivElement>(null);
+
+    return (
+        <div css={{ position: 'relative' }}>
+            <div
+                ref={scrollBoxRef}
+                css={{
+                    borderRadius: 12,
+                    marginBottom: 12,
+                    width: '100%',
+                    aspectRatio: '20 / 19',
+                    display: 'grid',
+                    gridAutoFlow: 'column',
+                    gridTemplateAreas: 'none',
+                    gridAutoColumns: '100%',
+                    overflowY: 'hidden',
+                    overflowX: 'auto',
+                    scrollSnapType: 'x mandatory',
+                    '::-webkit-scrollbar': {
+                        display: 'none'
+                    }
+                }}
+            >
+                {pictures.map((picture, index) => (
+                    <Picture
+                        index={index}
+                        src={picture}
+                        onChangeIndex={index => setCurrentIndex(index)}
+                        css={{ scrollSnapStop: 'always' }}
+                    />
+                ))}
+            </div>
+            <div
+                css={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: 20,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                <div
+                    css={{
+                        overflow: 'clip',
+                        width: '55px'
+                    }}>
+                    <div
+                        css={{
+                            display: 'flex',
+                            transform: `translateX(${-11 * clamp(currentIndex, 2, pictures.length - 2)}px)`,
+                            transition: 'all 0.2s'
+                        }}>
+                        {new Array(20).fill(0).map((_, index) => (
+                            <span
+                                css={{
+                                    flexShrink: 0,
+                                    height: 6,
+                                    width: 6,
+                                    borderRadius: '50%',
+                                    backgroundColor: 'white',
+                                    margin: '0 2.5px',
+                                    opacity: currentIndex === index ? 1 : 0.6
+                                }} />
+                        ))}
+                    </div>
+                </div>
+            </div>
+            <button
+                css={{
+                    padding: 8,
+                    border: 0,
+                    position: 'absolute',
+                    backgroundColor: 'transparent',
+                    top: 6,
+                    right: 6,
+                    ":active": {
+                        transform: 'scale(0.9)',
+                        transition: 'all 0.2s'
+                    }
+                }}
+                onClick={() => setSelected(!selected)}
+            >
+                <HeartIcon stroke={'white'} fill={selected ? '#FF385C' : 'rgba(0, 0, 0, 0.5)'} />
+            </button>
+            <div
+                id='arrow-button-wrapper'
+                css={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: '50%',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    padding: '0 12px',
+                    visibility: 'hidden',
+                    opacity: 0
+                }}
+            >
+                <ArrowButton
+                    visible={currentIndex > 0}
+                    onClick={() => {
+                        setCurrentIndex(currentIndex - 1);
+                        scrollBoxRef.current?.scrollBy({ left: -scrollBoxRef.current.clientWidth, behavior: 'smooth' })
+                    }}
+                >
+                    <LeftIcon />
+                </ArrowButton>
+                <ArrowButton
+                    visible={currentIndex < pictures.length - 1}
+                    onClick={() => {
+                        setCurrentIndex(currentIndex + 1);
+                        scrollBoxRef.current?.scrollBy({ left: scrollBoxRef.current.clientWidth, behavior: 'smooth' })
+                    }}
+                >
+                    <RightIcon />
+                </ArrowButton>
             </div>
         </div>
     )
@@ -218,6 +279,23 @@ const Picture = ({ src, index, onChangeIndex }: { src: string, index: number, on
         </picture>
     )
 }
+
+const ArrowButton = styled.button(({ visible }: { visible: boolean }) => ({
+    border: '1px solid rgba(0, 0, 0, 0.08)',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: '50%',
+    width: 32,
+    height: 32,
+    display: 'inline-flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    cursor: 'pointer',
+    visibility: visible ? 'visible' : 'hidden',
+    ':hover': {
+        transform: 'scale(1.03)',
+        transition: '0.3s scale'
+    }
+}))
 
 const clamp = (value: number, left: number, right: number) => {
     if (value < left) return 0;
