@@ -90,10 +90,12 @@ const RoomListItem = ({
             css={{
                 position: 'relative',
                 '@media (hover: hover)': {
-                    '#arrow-button-wrapper': {
-                        transition: 'all 0.3s',
-                        opacity: 1,
-                        visibility: 'visible'
+                    ':hover': {
+                        '#arrow-button-wrapper': {
+                            transition: 'all 0.3s',
+                            opacity: 1,
+                            visibility: 'visible'
+                        }
                     }
                 }
             }}
