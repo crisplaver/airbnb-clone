@@ -89,7 +89,7 @@ const RoomListItem = ({
         <div
             css={{
                 position: 'relative',
-                ':hover': {
+                '@media (hover: hover)': {
                     '#arrow-button-wrapper': {
                         transition: 'all 0.3s',
                         opacity: 1,
