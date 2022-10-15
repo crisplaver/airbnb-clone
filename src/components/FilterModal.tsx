@@ -1,6 +1,7 @@
 import { keyframes } from '@emotion/react';
 import { useState } from 'react';
 import { ReactComponent as CloseIcon } from '../assets/close.svg';
+import RangeBar from './RangeBar';
 import Switch from './Switch';
 
 const FilterModal = ({ onClickClose }: { onClickClose: () => void }) => {
@@ -103,10 +104,13 @@ const FilterModal = ({ onClickClose }: { onClickClose: () => void }) => {
                         <h2 css={{ fontSize: 18 }}>가격 범위</h2>
                         <div css={{ paddingTop: 8 }}>
                             <div css={{ color: '#717171' }}>평균 1박 요금은 ₩195,866입니다</div>
-                            <div css={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <div css={{ flex: 1, height: 55, marginRight: 1, backgroundColor: 'rgb(176,176,176)' }} />
-                                <div css={{ flex: 1, height: 55, marginRight: 1, backgroundColor: 'rgb(176,176,176)' }} />
-                            </div>
+                            <RangeBar
+                                containerCss={{
+                                    margin: 'auto',
+                                    marginTop: 24,
+                                    width: '90%'
+                                }}
+                            />
                         </div>
                     </section>
                     <section css={{ padding: 24 }}>
