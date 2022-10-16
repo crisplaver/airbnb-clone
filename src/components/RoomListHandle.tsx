@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import usePointer from "../hooks/usePointer";
 
 const RoomListHandle = ({
@@ -7,15 +8,16 @@ const RoomListHandle = ({
     isCollabsed: boolean,
     onPointerMoveEnd: () => void,
 }) => {
+    const boxRef = useRef<HTMLDivElement>(null);
     const {
         y,
-        box,
         isPointerPressed,
-        setY
+        reset
     } = usePointer({
+        ref: boxRef,
         onPointerMoveEnd: () => {
             onPointerMoveEnd();
-            setY(0)
+            reset()
         }
     })
 
@@ -29,7 +31,7 @@ const RoomListHandle = ({
                 zIndex: -100
             }}>
             <div
-                ref={box}
+                ref={boxRef}
                 css={{
                     position: 'fixed',
                     width: '100%',

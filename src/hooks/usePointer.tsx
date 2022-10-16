@@ -1,61 +1,105 @@
-import { useEffect, useRef, useState } from "react"
-
-let isPointerPressed = false;
-let prevY = 0;
+import { RefObject, useEffect, useRef, useState } from "react"
 
 const usePointer = ({
+    ref,
+    clampX,
+    clampY,
     onPointerMoveEnd
 }: {
+    ref: RefObject<HTMLDivElement>,
+    clampX?: [number, number],
+    clampY?: [number, number],
     onPointerMoveEnd: () => void
 }) => {
-    const box = useRef<HTMLDivElement>(null);
+    const isPointerPressed = useRef(false);
+    let prevX = 0;
+    let prevY = 0;
+    let lastX = 0;
+    let lastY = 0;
+
     const [x, setX] = useState(0);
     const [y, setY] = useState(0);
 
     useEffect(() => {
         const handleMouseMove = (e: any) => {
-            if (isPointerPressed) {
-                setY(e.clientY - prevY)
+            if (isPointerPressed.current) {
+                const x = e.clientX - prevX;
+                const y = e.clientY - prevY;
+
+                if (clampX && (x < clampX[0] || x > clampX[1])) { }
+                else {
+                    lastX = x;
+                    setX(x)
+                }
+
+                if (clampY && (x < clampY[0] || x > clampY[1])) { }
+                else {
+                    lastY = y;
+                    setY(y);
+                }
             }
         }
 
         const handleMouseDown = (e: any) => {
-            prevY = e.clientY
-            isPointerPressed = true;
+            prevX = e.clientX - lastX;
+            prevY = e.clientY - lastY;
+            isPointerPressed.current = true;
+        }
+
+        const handleMouseUp = (e: any) => {
+            if (isPointerPressed.current) {
+                isPointerPressed.current = false;
+                onPointerMoveEnd();
+            }
         }
 
         const handleTouchMove = (e: any) => {
-            if (isPointerPressed) {
-                setY(e.targetTouches[0].clientY - prevY)
+            if (isPointerPressed.current) {
+                const x = e.targetTouches[0].clientX - prevX;
+                const y = e.targetTouches[0].clientY - prevY;
+
+                
+                if (clampX && (x < clampX[0] || x > clampX[1])) { }
+                else {
+                    lastX = x;
+                    setX(x)
+                }
+
+                if (clampY && (x < clampY[0] || x > clampY[1])) { }
+                else {
+                    lastY = y;
+                    setY(y);
+                }
             }
         }
 
         const handleTouchStart = (e: any) => {
+            prevX = e.targetTouches[0].clientX
             prevY = e.targetTouches[0].clientY
-            isPointerPressed = true;
+            isPointerPressed.current = true;
         }
 
-        const handlePointerMoveEnd = () => {
+        const handleTouchEnd = (e: any) => {
             if (isPointerPressed) {
-                isPointerPressed = false;
+                isPointerPressed.current = false;
                 onPointerMoveEnd();
             }
         }
 
         document.addEventListener('mousemove', handleMouseMove)
-        document.addEventListener('mouseup', handlePointerMoveEnd)
-        box.current?.addEventListener('mousedown', handleMouseDown)
+        document.addEventListener('mouseup', handleMouseUp)
+        ref.current?.addEventListener('mousedown', handleMouseDown)
         document.addEventListener('touchmove', handleTouchMove)
-        document.addEventListener('touchend', handlePointerMoveEnd)
-        box.current?.addEventListener('touchstart', handleTouchStart)
+        document.addEventListener('touchend', handleTouchEnd)
+        ref.current?.addEventListener('touchstart', handleTouchStart)
 
         return () => {
             document.removeEventListener('mousemove', handleMouseMove)
-            document.removeEventListener('mouseup', handlePointerMoveEnd)
-            box.current?.removeEventListener('mousedown', handleMouseDown)
+            document.removeEventListener('mouseup', handleMouseUp)
+            ref.current?.removeEventListener('mousedown', handleMouseDown)
             document.removeEventListener('touchmove', handleTouchMove)
-            document.removeEventListener('touchend', handlePointerMoveEnd)
-            box.current?.removeEventListener('touchstart', handleTouchStart)
+            document.removeEventListener('touchend', handleTouchEnd)
+            ref.current?.removeEventListener('touchstart', handleTouchStart)
         }
     }, [])
 
@@ -63,10 +107,15 @@ const usePointer = ({
     return {
         x,
         y,
-        box,
-        isPointerPressed,
-        setX,
-        setY
+        isPointerPressed: isPointerPressed.current,
+        reset: () => {
+            setX(0);
+            setY(0);
+            lastX = 0;
+            lastY = 0;
+            prevX = 0;
+            prevY = 0;
+        }
     }
 }
 
