@@ -58,7 +58,7 @@ const usePointer = ({
                 const x = e.targetTouches[0].clientX - prevX;
                 const y = e.targetTouches[0].clientY - prevY;
 
-                
+
                 if (clampX && (x < clampX[0] || x > clampX[1])) { }
                 else {
                     lastX = x;
@@ -74,8 +74,8 @@ const usePointer = ({
         }
 
         const handleTouchStart = (e: any) => {
-            prevX = e.targetTouches[0].clientX
-            prevY = e.targetTouches[0].clientY
+            prevX = e.targetTouches[0].clientX - lastX;
+            prevY = e.targetTouches[0].clientY - lastY;
             isPointerPressed.current = true;
         }
 
