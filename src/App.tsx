@@ -41,7 +41,7 @@ function App() {
 
       <RoomListHandle
         isCollabsed={isCollabsed}
-        onHandleMoveEnd={() => setIsCollabsed(false)}
+        onPointerMoveEnd={() => setIsCollabsed(false)}
       />
 
       <RoomList

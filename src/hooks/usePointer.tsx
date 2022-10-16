@@ -19,14 +19,6 @@ const usePointer = ({
             }
         }
 
-        const handleMouseUp = () => {
-            if (isPointerPressed) {
-                isPointerPressed = false;
-                onPointerMoveEnd();
-                setY(0);
-            }
-        }
-
         const handleMouseDown = (e: any) => {
             prevY = e.clientY
             isPointerPressed = true;
@@ -38,33 +30,31 @@ const usePointer = ({
             }
         }
 
-        const handleTouchEnd = () => {
-            if (isPointerPressed) {
-                isPointerPressed = false;
-                onPointerMoveEnd();
-                setY(0);
-            }
-        }
-
         const handleTouchStart = (e: any) => {
             prevY = e.targetTouches[0].clientY
             isPointerPressed = true;
         }
 
+        const handlePointerMoveEnd = () => {
+            if (isPointerPressed) {
+                isPointerPressed = false;
+                onPointerMoveEnd();
+            }
+        }
 
         document.addEventListener('mousemove', handleMouseMove)
-        document.addEventListener('mouseup', handleMouseUp)
+        document.addEventListener('mouseup', handlePointerMoveEnd)
         box.current?.addEventListener('mousedown', handleMouseDown)
         document.addEventListener('touchmove', handleTouchMove)
-        document.addEventListener('touchend', handleTouchEnd)
+        document.addEventListener('touchend', handlePointerMoveEnd)
         box.current?.addEventListener('touchstart', handleTouchStart)
 
         return () => {
             document.removeEventListener('mousemove', handleMouseMove)
-            document.removeEventListener('mouseup', handleMouseUp)
+            document.removeEventListener('mouseup', handlePointerMoveEnd)
             box.current?.removeEventListener('mousedown', handleMouseDown)
             document.removeEventListener('touchmove', handleTouchMove)
-            document.removeEventListener('touchend', handleTouchEnd)
+            document.removeEventListener('touchend', handlePointerMoveEnd)
             box.current?.removeEventListener('touchstart', handleTouchStart)
         }
     }, [])
@@ -74,7 +64,9 @@ const usePointer = ({
         x,
         y,
         box,
-        isPointerPressed
+        isPointerPressed,
+        setX,
+        setY
     }
 }
 

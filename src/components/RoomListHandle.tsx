@@ -2,17 +2,21 @@ import usePointer from "../hooks/usePointer";
 
 const RoomListHandle = ({
     isCollabsed,
-    onHandleMoveEnd,
+    onPointerMoveEnd,
 }: {
     isCollabsed: boolean,
-    onHandleMoveEnd: () => void,
+    onPointerMoveEnd: () => void,
 }) => {
     const {
         y,
         box,
-        isPointerPressed
+        isPointerPressed,
+        setY
     } = usePointer({
-        onPointerMoveEnd: onHandleMoveEnd
+        onPointerMoveEnd: () => {
+            onPointerMoveEnd();
+            setY(0)
+        }
     })
 
     return (
