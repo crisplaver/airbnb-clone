@@ -11,14 +11,14 @@ const Switch = ({
         <button
             onClick={onClick}
             css={{
-                border: '1px solid rgb(176,176,176)',
                 padding: '1px 6px',
                 backgroundColor: isSelected ? 'black' : 'rgb(176,176,176)',
                 borderRadius: 32,
                 width: 48,
                 height: 32,
                 position: 'relative',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                border: 0
             }}
         >
             <div
@@ -29,8 +29,8 @@ const Switch = ({
                     backgroundColor: 'white',
                     position: 'absolute',
                     bottom: 0,
-                    left: 1,
-                    top: 1,
+                    left: 2,
+                    top: 2,
                     transition: 'all 250ms',
                     transform: isSelected ? 'translateX(16px)' : 'translateX(0px)',
                     display: 'flex',
