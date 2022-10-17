@@ -22,7 +22,7 @@ const usePointer = ({
 
     useEffect(() => {
         const handleMouseMove = (e: any) => {
-            if (isPointerPressed.current) {
+            if (isPointerPressed.current) {y
                 const x = e.clientX - prevX;
                 const y = e.clientY - prevY;
 
@@ -37,6 +37,9 @@ const usePointer = ({
                     lastY = y;
                     setY(y);
                 }
+
+                e.stopPropagation();
+                e.preventDefault();
             }
         }
 
@@ -70,6 +73,9 @@ const usePointer = ({
                     lastY = y;
                     setY(y);
                 }
+
+                e.stopPropagation();
+                e.preventDefault();
             }
         }
 
