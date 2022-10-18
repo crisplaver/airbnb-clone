@@ -1,5 +1,6 @@
 import { keyframes } from '@emotion/react';
 import { useState } from 'react';
+import prices from '../apis/prices';
 import { ReactComponent as CloseIcon } from '../assets/close.svg';
 import RangeBar from './RangeBar';
 import Switch from './Switch';
@@ -8,7 +9,7 @@ const FilterModal = ({ onClickClose }: { onClickClose: () => void }) => {
     // #### 닫기 아이콘의 position이 relative여야 hover 이미지가 제대로 표시되는 이유?
 
     const [isSelected, setIsSelected] = useState(false);
-    const [values, setValues] = useState([0, 100]);
+    const [values, setValues] = useState([6000, 30000]);
 
     const open = keyframes({
         '0%': {
@@ -100,15 +101,24 @@ const FilterModal = ({ onClickClose }: { onClickClose: () => void }) => {
                     <div css={{ fontWeight: 800, fontSize: 16 }}>필터</div>
                     <div></div>
                 </header>
-                <div css={{ flex: 1, maxHeight: '100%' }}>
+                <div
+                    css={{
+                        flex: 1,
+                        maxHeight: '90%',
+                        overflowY: 'scroll',
+                        '::-webkit-scrollbar': {
+                            display: 'none'
+                        }
+                    }}>
                     <section css={{ padding: 24 }}>
                         <h2 css={{ fontSize: 18 }}>가격 범위</h2>
                         <div css={{ paddingTop: 8 }}>
                             <div css={{ color: '#717171' }}>평균 1박 요금은 ₩195,866입니다</div>
                             <RangeBar
+                                prices={prices}
                                 values={values}
-                                min={0}
-                                max={100}
+                                min={6000}
+                                max={30000}
                                 containerCss={{
                                     margin: 'auto',
                                     marginTop: 24,
@@ -116,6 +126,7 @@ const FilterModal = ({ onClickClose }: { onClickClose: () => void }) => {
                                 }}
                                 onChangeValues={values => setValues(values)}
                             />
+
                         </div>
                     </section>
                     <section css={{ padding: 24 }}>
@@ -132,13 +143,14 @@ const FilterModal = ({ onClickClose }: { onClickClose: () => void }) => {
                             <Switch isSelected={isSelected} onClick={() => setIsSelected(!isSelected)} />
                         </div>
                     </section>
-                </div>
+                    <div css={{ height: 600 }} />
+                </div >
                 <footer css={{ padding: '16px 24px', display: 'flex', justifyContent: 'space-between', borderTop: '1px solid rgb(235, 235, 235)' }}>
                     <button css={{ padding: 0, border: 0, background: 'transparent', fontSize: 16, fontWeight: 600, textDecoration: 'underline' }}>전체 해제</button>
                     <button css={{ border: 0, background: 'rgb(34, 34, 34)', color: 'white', padding: '14px 24px', fontSize: 16, fontWeight: 600, borderRadius: 8 }}>숙소 100개 표시</button>
                 </footer>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 
