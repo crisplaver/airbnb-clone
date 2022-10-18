@@ -8,6 +8,7 @@ const FilterModal = ({ onClickClose }: { onClickClose: () => void }) => {
     // #### 닫기 아이콘의 position이 relative여야 hover 이미지가 제대로 표시되는 이유?
 
     const [isSelected, setIsSelected] = useState(false);
+    const [values, setValues] = useState([0, 100]);
 
     const open = keyframes({
         '0%': {
@@ -105,11 +106,15 @@ const FilterModal = ({ onClickClose }: { onClickClose: () => void }) => {
                         <div css={{ paddingTop: 8 }}>
                             <div css={{ color: '#717171' }}>평균 1박 요금은 ₩195,866입니다</div>
                             <RangeBar
+                                values={values}
+                                min={0}
+                                max={100}
                                 containerCss={{
                                     margin: 'auto',
                                     marginTop: 24,
                                     width: '90%'
                                 }}
+                                onChangeValues={values => setValues(values)}
                             />
                         </div>
                     </section>

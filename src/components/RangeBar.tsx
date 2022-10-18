@@ -1,18 +1,77 @@
 import { Interpolation, Theme } from "@emotion/react";
-import { forwardRef, useRef } from "react";
-import usePointer from "../hooks/usePointer";
+import { MouseEventHandler, TouchEvent, TouchEventHandler, useCallback, useRef } from "react";
 
+let indexMoving: number | null = null;
 const RangeBar = ({
-    containerCss
+    min,
+    max,
+    values,
+    containerCss,
+    onChangeValues
 }: {
+    min: number,
+    max: number,
+    values: number[],
     containerCss: Interpolation<Theme>
+    onChangeValues: (values: number[]) => void
 }) => {
-    const boxRef1 = useRef<HTMLDivElement>(null);
-    const { x } = usePointer({
-        ref: boxRef1,
-        clampX: [10, 400],
-        onPointerMoveEnd: () => { }
-    });
+    const barRef = useRef<HTMLDivElement>(null);
+
+    const mouseMoveEvent = useCallback((e: globalThis.MouseEvent) => {
+        moveEvent(e.clientX)
+    }, [values])
+
+    const touchMoveEvent = useCallback((e: globalThis.TouchEvent) => {
+        moveEvent(e.targetTouches[0].clientX)
+    }, [values])
+
+    const moveEvent = (clientX: number) => {
+        const rect = barRef.current?.getBoundingClientRect();
+        if (rect) {
+            if (indexMoving === null) return;
+
+            const newValues = [...values];
+
+            const newMax = newValues[indexMoving + 1] ?? max;
+            const newMin = newValues[indexMoving - 1] ?? min;
+            const newValue = (clientX - rect.left) / rect.width * (max - min);
+
+            if (newValue < newMin) {
+                newValues[indexMoving] = newMin;
+            }
+            else if (newValue > newMax) {
+                newValues[indexMoving] = newMax;
+            }
+            else {
+                newValues[indexMoving] = newValue;
+            }
+            onChangeValues(newValues);
+        }
+    }
+
+    const mouseEndEvent = useCallback(() => {
+        indexMoving = null;
+        document.removeEventListener('mousemove', mouseMoveEvent)
+        document.removeEventListener('mouseup', mouseEndEvent)
+    }, []);
+
+    const touchEndEvent = useCallback(() => {
+        indexMoving = null;
+        document.removeEventListener('mousemove', mouseMoveEvent)
+        document.removeEventListener('mouseup', mouseEndEvent)
+    }, []);
+
+    const handleMouseDown = (index: number) => {
+        indexMoving = index;
+        document.addEventListener('mousemove', mouseMoveEvent);
+        document.addEventListener('mouseup', mouseEndEvent);
+    }
+
+    const handleTouchStart = (index: number) => {
+        indexMoving = index;
+        document.addEventListener('touchmove', touchMoveEvent);
+        document.addEventListener('touchend', touchEndEvent);
+    }
 
     return (
         <div css={containerCss}>
@@ -26,29 +85,41 @@ const RangeBar = ({
                 <div css={{ flex: 1, height: 0, marginRight: 1, backgroundColor: 'rgb(176,176,176)' }} />
             </div>
             <div css={{ position: 'relative' }}>
-                <div css={{ width: '100%', height: 2, backgroundColor: 'rgb(221,221,221)' }} />
-                <RangeHandle
-                    ref={boxRef1}
-                    containerCss={{
-                        position: 'absolute',
-                        top: -16,
-                        transform: `translateX(${x}px)`
-                    }}
-                />
+                <div css={{ width: '100%', height: 2, backgroundColor: 'rgb(221,221,221)' }} ref={barRef} />
+                {
+                    values.map((value, index) => (
+                        <RangeHandle
+                            key={index.toString()}
+                            onMouseDown={() => handleMouseDown(index)}
+                            onTouchStart={() => handleTouchStart(index)}
+                            containerCss={{
+                                position: 'absolute',
+                                top: -16,
+                                left: `${(value - min) / (max - min) * 100}%`
+                            }}
+                        />
+                    ))
+                }
             </div>
         </div>
     )
 }
 
-// 자식 컴포넌트의 ref를 참조할 떄는 ref forwarding을 활용한다
-// 부모 구성요소에 ref를 노출하는 것은 캡슐화를 깨뜨리기 때문에 권장되지 않음
-// https://reactjs.org/docs/refs-and-the-dom.html#exposing-dom-refs-to-parent-components
-const RangeHandle = forwardRef<HTMLDivElement, { containerCss?: Interpolation<Theme> }>(({
-    containerCss
-}, ref) => {
+const RangeHandle = ({
+    containerCss,
+    onMouseDown,
+    onTouchStart
+}: {
+    onMouseDown: MouseEventHandler,
+    onTouchStart: TouchEventHandler,
+    containerCss: Interpolation<Theme>
+}) => {
     return (
         <div css={containerCss}>
-            <div ref={ref}>
+            <div
+                onMouseDown={onMouseDown}
+                onTouchStart={onTouchStart}
+            >
                 <button
                     css={{
                         marginLeft: -16,
@@ -70,6 +141,6 @@ const RangeHandle = forwardRef<HTMLDivElement, { containerCss?: Interpolation<Th
             </div>
         </div>
     )
-})
+}
 
 export default RangeBar;

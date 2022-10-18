@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import usePointer from "../hooks/usePointer";
+import useGesture from "../hooks/usePointer";
 
 const RoomListHandle = ({
     isCollabsed,
@@ -13,9 +13,9 @@ const RoomListHandle = ({
         y,
         isPointerPressed,
         reset
-    } = usePointer({
+    } = useGesture({
         ref: boxRef,
-        onPointerMoveEnd: () => {
+        onMoveEnd: () => {
             onPointerMoveEnd();
             reset()
         }

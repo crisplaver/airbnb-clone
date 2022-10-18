@@ -1,15 +1,13 @@
 import { RefObject, useEffect, useRef, useState } from "react"
 
-const usePointer = ({
+const useGesture = ({
     ref,
-    clampX,
-    clampY,
-    onPointerMoveEnd
+    onMoveEnd,
+    onMove
 }: {
     ref: RefObject<HTMLDivElement>,
-    clampX?: [number, number],
-    clampY?: [number, number],
-    onPointerMoveEnd: () => void
+    onMoveEnd?: () => void,
+    onMove?: (x: number, y: number) => { x?: number, y?: number } | void
 }) => {
     const isPointerPressed = useRef(false);
     let prevX = 0;
@@ -22,73 +20,64 @@ const usePointer = ({
 
     useEffect(() => {
         const handleMouseMove = (e: any) => {
-            if (isPointerPressed.current) {y
-                const x = e.clientX - prevX;
-                const y = e.clientY - prevY;
-
-                if (clampX && (x < clampX[0] || x > clampX[1])) { }
-                else {
-                    lastX = x;
-                    setX(x)
-                }
-
-                if (clampY && (x < clampY[0] || x > clampY[1])) { }
-                else {
-                    lastY = y;
-                    setY(y);
-                }
-
-                e.stopPropagation();
-                e.preventDefault();
-            }
+            handleMove(e.clientX, e.clientY)
         }
 
         const handleMouseDown = (e: any) => {
-            prevX = e.clientX - lastX;
-            prevY = e.clientY - lastY;
-            isPointerPressed.current = true;
+            handleMoveStart(e.clientX, e.clientY)
         }
 
-        const handleMouseUp = (e: any) => {
-            if (isPointerPressed.current) {
-                isPointerPressed.current = false;
-                onPointerMoveEnd();
-            }
+        const handleMouseUp = () => {
+            handleMoveEnd()
         }
 
         const handleTouchMove = (e: any) => {
-            if (isPointerPressed.current) {
-                const x = e.targetTouches[0].clientX - prevX;
-                const y = e.targetTouches[0].clientY - prevY;
-
-
-                if (clampX && (x < clampX[0] || x > clampX[1])) { }
-                else {
-                    lastX = x;
-                    setX(x)
-                }
-
-                if (clampY && (x < clampY[0] || x > clampY[1])) { }
-                else {
-                    lastY = y;
-                    setY(y);
-                }
-
-                e.stopPropagation();
-                e.preventDefault();
-            }
+            handleMove(e.targetTouches[0].clientX, e.targetTouches[0].clientY)
         }
 
         const handleTouchStart = (e: any) => {
-            prevX = e.targetTouches[0].clientX - lastX;
-            prevY = e.targetTouches[0].clientY - lastY;
+            handleMoveStart(e.targetTouches[0].clientX, e.targetTouches[0].clientY)
+        }
+
+        const handleTouchEnd = () => {
+            handleMoveEnd();
+        }
+
+        const handleMoveStart = (clientX: number, clientY: number) => {
+            prevX = clientX - lastX;
+            prevY = clientY - lastY;
             isPointerPressed.current = true;
         }
 
-        const handleTouchEnd = (e: any) => {
+        const handleMove = (clientX: number, clientY: number) => {
+            if (isPointerPressed.current) {
+                let x = clientX - prevX;
+                let y = clientY - prevY;
+
+                if (onMove) {
+                    const result = onMove(x, y);
+                    if (result?.x !== undefined) {
+                        x = result.x
+                    }
+                    if (result?.y !== undefined) {
+                        y = result.y
+                    }
+                }
+
+                lastX = x;
+                setX(x)
+
+                lastY = y;
+                setY(y);
+            }
+        }
+
+        const handleMoveEnd = () => {
             if (isPointerPressed) {
                 isPointerPressed.current = false;
-                onPointerMoveEnd();
+                if (onMoveEnd) {
+                    onMoveEnd();
+                }
             }
         }
 
@@ -125,4 +114,4 @@ const usePointer = ({
     }
 }
 
-export default usePointer;
+export default useGesture;
