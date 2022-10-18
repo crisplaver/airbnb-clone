@@ -199,8 +199,8 @@ const PriceInput = ({
                 border: '1px solid rgb(172,172,172)',
                 borderRadius: 8,
                 minHeight: 56,
-                width: '100%',
                 display: 'flex',
+                width: '100%'
             }}>
             <label css={{ position: 'relative', flex: 1 }}>
                 <div
@@ -219,7 +219,7 @@ const PriceInput = ({
                 <div css={{ display: 'flex' }}>
                     <div css={{ paddingTop: 26, paddingLeft: 12, marginRight: -6 }}>₩</div>
                     <input
-                        css={{ margin: '26px 12px 6px', border: 0, outline: 'none' }}
+                        css={{ margin: '26px 12px 6px', border: 0, outline: 'none', width: '100%' }}
                         value={value}
                         onChange={e => onChangeValue(+e.target.value)}
                         onBlur={onBlur}
