@@ -1,7 +1,7 @@
 # Airbnb Web Clone
 html, css 공부용
 
-# 구현 하는 기능
+# 구현할 것
 - [x] 상단 네비게이션 바 (모바일)
 - [ ] 상단 네비게이션 바 (데스크탑)
 - [x] 하단 네비게이션 바 (모바일)
@@ -17,6 +17,7 @@ html, css 공부용
     - [x] 위시리스트 추가 버튼
     - [x] 숙소 정보
     - infinite scroll은 구현하지 않음
+- [ ] 크로스 브라우징 이슈 (Safari, iOS Overscroll bounce)
 
 # 고려하는 것
 - 가능하면 에어비앤비에서 구현한 방법(html, css 요소)을 사용하여 구현
